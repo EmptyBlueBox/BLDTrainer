@@ -131,12 +131,12 @@ function clearAll() {
 function input() {
     var outputInfo = "";
     inputcode = [];
-    let eBuffer = document.getElementById("edgebuffer").value.toUpperCase();
+    let eBuffer = document.getElementById("edgebuffer").value.toLowerCase();
 
     var inputs = document.getElementById("codeselect").getElementsByTagName("input");
     for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].checked === true && posChichu(inputs[i].id) != posChichu(eBuffer)) {
-            inputcode.push(inputs[i].id);
+        if (inputs[i].checked === true && posChichu(inputs[i].id.toLowerCase()) != posChichu(eBuffer)) {
+            inputcode.push(inputs[i].id.toLowerCase());
         }
     }
 
