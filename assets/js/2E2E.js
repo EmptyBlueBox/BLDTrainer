@@ -2,10 +2,10 @@
 
 let inputcode = [];
 
-function twoCornerGenerator() {
-    let cBuffer = document.getElementById("cornerbuffer").value.toUpperCase();
-    let edgescramble = document.getElementById("edgescramble").checked;
-    let twiststate = document.getElementById("twiststate").checked;
+function twoEdgeGenerator() {
+    let eBuffer = document.getElementById("edgebuffer").value.toLowerCase();
+    let cornerscramble = document.getElementById("cornerscramble").checked;
+    let flipstate = document.getElementById("flipstate").checked;
     let downstate = document.getElementById("donwstate").checked;
 
     document.getElementById("outputScrs").value = "";
@@ -17,15 +17,15 @@ function twoCornerGenerator() {
     let scrlist = [];
 
     for (let i = 0; i < inputcode.length; i++) {
-        let temparr = [cBuffer, inputcode[i]];
+        let temparr = [eBuffer, inputcode[i].toLowerCase()];
         
         if(downstate){
-            let poslist = [posChichu(cBuffer),inputcode[i]]
+            let poslist = [posChichu(eBuffer),inputcode[i].toLowerCase()]
             let allpos = Array.from({ length: 4 }, (_, i) => i);
             let otherpos = allpos.filter(item => !poslist.includes(item));
             if(otherpos.length > 0){
                 for (let x = 0; x < otherpos.length; x ++) {
-                    temparr.push(globalState[3 * otherpos[x]]);
+                    temparr.push(globalState[24 + 2 * otherpos[x]]);
                 }
             }
         }
@@ -40,9 +40,9 @@ function twoCornerGenerator() {
         }
         algSet = tempalgset;
 
-        if(twiststate===false){
+        if(flipstate===false){
             let cutedalgSet = [];
-            for (let x = 0; x < algSet.length; x += 3) {
+            for (let x = 0; x < algSet.length; x += 2) {
                 cutedalgSet.push(algSet[x]);
             }
             algSet = cutedalgSet;
@@ -51,35 +51,37 @@ function twoCornerGenerator() {
         algSet = shuffle(Array.from(algSet));
 
         for (let j = 0; j < algSet.length; j++) {
-            let codelist = cBuffer;
+            let codelist = eBuffer;
             let poslist = [];
 
-            let eState;
-            if (edgescramble) {
-                eState = randomEdge(0);
+            let cState;
+            if (cornerscramble) {
+                cState = randomCorner(0);
             } else {
-                eState = globalState;
+                cState = globalState;
             }
 
-            poslist.push(posChichu(cBuffer));
-            poslist.push(posChichu(inputcode[i]));
+            poslist.push(posChichu(eBuffer));
+            poslist.push(posChichu(inputcode[i].toLowerCase()));
             poslist.push(posChichu(algSet[j][0]));
             poslist.push(posChichu(algSet[j][1]));
 
-            let allpos = Array.from({ length: 8 }, (_, i) => i);
+            let allpos = Array.from({ length: 12 }, (_, i) => i);
             let otherpos = allpos.filter(item => !poslist.includes(item));
             otherpos = shuffle(Array.from(otherpos));
 
             for (let k = 0; k < otherpos.length; k++) {
-                codelist += globalState[3 * otherpos[k] + ~~(Math.random() * 3)];
+                codelist += globalState[24 + 2 * otherpos[k] + ~~(Math.random() * 2)];
             }
 
-            codelist += inputcode[i];
-            codelist += globalState[3 * posChichu(algSet[j][1])];
+            codelist += inputcode[i].toLowerCase();
+            codelist += globalState[24 + 2 * posChichu(algSet[j][1])];
             codelist += algSet[j][0];
             codelist += algSet[j][1];
 
-            let state = codeTrans(codelist, eState);
+            console.log("codelist",codelist)
+
+            let state = codeTrans(codelist, cState);
             times += 1;
             scrlist.push(m2p(state));
             //document.getElementById("outputScrs").value += times.toString() + ". " + m2p(state) + "\n";
@@ -91,7 +93,7 @@ function twoCornerGenerator() {
     }
 
 
-    document.getElementById("outputInfo").innerHTML = "<b>输出信息统计: </b> 随机生成" + times + "条打乱，遍历输入编码的所有2C2C情况。";
+    document.getElementById("outputInfo").innerHTML = "<b>输出信息统计: </b> 随机生成" + times + "条打乱，遍历输入编码的所有2E2E情况。";
     if (document.getElementById("outputScrs").value != "") {
         document.getElementById("copyBtn").style.display = "block";
     }
@@ -129,11 +131,11 @@ function clearAll() {
 function input() {
     var outputInfo = "";
     inputcode = [];
-    let cBuffer = document.getElementById("cornerbuffer").value.toUpperCase();
+    let eBuffer = document.getElementById("edgebuffer").value.toUpperCase();
 
     var inputs = document.getElementById("codeselect").getElementsByTagName("input");
     for (var i = 0; i < inputs.length; i++) {
-        if (inputs[i].checked === true && posChichu(inputs[i].id) != posChichu(cBuffer)) {
+        if (inputs[i].checked === true && posChichu(inputs[i].id) != posChichu(eBuffer)) {
             inputcode.push(inputs[i].id);
         }
     }
