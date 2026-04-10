@@ -65,33 +65,38 @@ function ltctInputCheck(){
     var cBuffer = document.getElementById("cornerbuffer").value.toUpperCase();
 
     var newCodes = [];
+    var displayCodes = [];
     for (let i = 0; i < inputCodes.length; i++) {
         if(inputCodes[i]===""){
             continue;
         }
 
-        var code = inputCodes[i];
+        var code = inputCodes[i].replace(/\s/g, "").toUpperCase();
         code = code.replace("[", "");
         code = code.replace("]", "");
-        newCodes.push(code);
+        if(code === ""){
+            continue;
+        }
+        displayCodes.push(code);
+        newCodes.push(cornerCodeFromDisplay(code));
     }
 
     var outputInfo = "";
 
     for (let i = 0; i < newCodes.length; i++) {
         if(newCodes[i].length != 2){
-            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+newCodes[i]+'】长度不符要求。\n';
+            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+displayCodes[i]+'】长度不符要求。\n';
             continue;
         }
-        if(!isAlphabet(newCodes[i][0]) || !isAlphabet(newCodes[i][1])){
-            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+newCodes[i]+'】不是字母。\n';
+        if(!isCornerDisplayChar(displayCodes[i][0]) || !isCornerDisplayChar(displayCodes[i][1])){
+            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+displayCodes[i]+'】不是字母。\n';
             continue;
         }
         if(posChichu(newCodes[i][0]) === posChichu(cBuffer) || posChichu(newCodes[i][1]) === posChichu(cBuffer)){
-            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+newCodes[i]+'】包含缓冲编码。\n';
+            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+displayCodes[i]+'】包含缓冲编码。\n';
         }
         if(posChichu(newCodes[i][0]) === posChichu(newCodes[i][1])){
-            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+newCodes[i]+'】存在位置冲突。\n';
+            outputInfo += '您输入的第'+(i+1).toString()+'行编码【'+displayCodes[i]+'】存在位置冲突。\n';
         }
     }
 
@@ -103,7 +108,7 @@ function ltctInputCheck(){
         var popup = document.getElementById("popup");
         popup.style.display = "none";
         document.getElementById("inputInfo").innerHTML = "<b>输入信息统计: </b>您已输入" +
-            newCodes[0] + ", " + newCodes[1] + ", ... , " + newCodes.slice(-2, -1) + ", " + newCodes.slice(-1) + "共" + newCodes.length + "组编码。";
+            cornerCodeToDisplay(newCodes[0]) + ", " + cornerCodeToDisplay(newCodes[1]) + ", ... , " + cornerCodeToDisplay(newCodes.slice(-2, -1).join("")) + ", " + cornerCodeToDisplay(newCodes.slice(-1).join("")) + "共" + newCodes.length + "组编码。";
         return newCodes;
     }else{
         window.alert(outputInfo);

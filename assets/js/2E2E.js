@@ -145,7 +145,7 @@ function input() {
     }
 
     if (outputInfo === "") {
-        document.getElementById("inputInfo").innerHTML = `<b>输入信息统计: </b>您已输入${inputcode.join('')}共${inputcode.length}个编码。`
+        document.getElementById("inputInfo").innerHTML = `<b>输入信息统计: </b>您已输入${edgeCodeToDisplay(inputcode.join("")).toUpperCase()}共${inputcode.length}个编码。`
         document.getElementById("popup").style.display = "none";
     } else {
         window.alert(outputInfo);

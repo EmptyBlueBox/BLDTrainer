@@ -83,26 +83,29 @@ function parityInputCheck() {
     let cornerbuffer = String(document.getElementById("cornerbuffer").value).toUpperCase();
 
     newCodes = [];
+    let displayCodes = [];
     for (let i = 0; i < inputCodes.length; i++) {
-        if (inputCodes[i] === "") {
+        let displayCode = inputCodes[i].replace(/\s/g, "").toUpperCase();
+        if (displayCode === "") {
             continue;
         }
-        newCodes.push(inputCodes[i]);
+        displayCodes.push(displayCode);
+        newCodes.push(parityCodeFromDisplay(displayCode));
     }
 
     var outputInfo = "";
 
     for (let i = 0; i < newCodes.length; i++) {
         if (newCodes[i].length != 2) {
-            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + newCodes[i] + '】长度不符要求。\n';
+            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + displayCodes[i] + '】长度不符要求。\n';
             continue;
         }
-        if (!isAlphabet(newCodes[i][0]) || !isAlphabet(newCodes[i][1])) {
-            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + newCodes[i] + '】不是合法编码。\n';
+        if (!isEdgeDisplayChar(displayCodes[i][0]) || !isCornerDisplayChar(displayCodes[i][1])) {
+            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + displayCodes[i] + '】不是合法编码。\n';
             continue;
         }
         if (posChichu(newCodes[i][0].toLowerCase()) === posChichu(edgebuffer.toLowerCase()) || posChichu(newCodes[i][1].toUpperCase()) === posChichu(cornerbuffer.toUpperCase())) {
-            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + newCodes[i] + '】包含缓冲编码。\n';
+            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + displayCodes[i] + '】包含缓冲编码。\n';
         }
     }
 
@@ -113,7 +116,7 @@ function parityInputCheck() {
     if (outputInfo === "") {
         document.getElementById("popup").style.display = "none";
         document.getElementById("inputInfo").innerHTML = "<b>输入信息统计: </b>您已输入" +
-            newCodes[0] + ", " + newCodes[1] + ", ... , " + newCodes.slice(-2, -1) + ", " + newCodes.slice(-1) + "共" + newCodes.length + "组编码。";
+            parityCodeToDisplay(newCodes[0]) + ", " + parityCodeToDisplay(newCodes[1]) + ", ... , " + parityCodeToDisplay(newCodes.slice(-2, -1).join("")) + ", " + parityCodeToDisplay(newCodes.slice(-1).join("")) + "共" + newCodes.length + "组编码。";
         return newCodes;
     } else {
         window.alert(outputInfo);
@@ -138,7 +141,7 @@ function addSample() {
         if (eList1[i] !== edgebuffer) {
             for (let j = 0; j < eList2.length; j++) {
                 if (eList2[j] !== cornerbuffer) {
-                    document.getElementById("inputCodes").value += eList1[i].toUpperCase() + eList2[j].toUpperCase() + '\n';
+                    document.getElementById("inputCodes").value += parityCodeToDisplay(eList1[i].toUpperCase() + eList2[j].toUpperCase()) + '\n';
                 }
             }
         }

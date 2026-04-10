@@ -165,29 +165,32 @@ function edgeInputCheck() {
     var buffer = document.getElementById("edgebuffer").value;
 
     newCodes = [];
+    var displayCodes = [];
     for (let i = 0; i < inputCodes.length; i++) {
-        if (inputCodes[i] === "") {
+        let displayCode = inputCodes[i].replace(/\s/g, "").toUpperCase();
+        if (displayCode === "") {
             continue;
         }
-        newCodes.push(inputCodes[i].toLowerCase());
+        displayCodes.push(displayCode);
+        newCodes.push(edgeCodeFromDisplay(displayCode).toLowerCase());
     }
 
     var outputInfo = "";
 
     for (let i = 0; i < newCodes.length; i++) {
         if (newCodes[i].length != 2) {
-            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + newCodes[i] + '】长度不符要求。\n';
+            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + displayCodes[i] + '】长度不符要求。\n';
             continue;
         }
-        if (!isAlphabet(newCodes[i][0]) || !isAlphabet(newCodes[i][1])) {
-            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + newCodes[i] + '】不是合法编码。\n';
+        if (!isEdgeDisplayChar(displayCodes[i][0]) || !isEdgeDisplayChar(displayCodes[i][1])) {
+            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + displayCodes[i] + '】不是合法编码。\n';
             continue;
         }
         if (posChichu(newCodes[i][0].toLowerCase()) === posChichu(buffer.toLowerCase()) || posChichu(newCodes[i][1].toLowerCase()) === posChichu(buffer.toLowerCase())) {
-            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + newCodes[i] + '】包含缓冲编码。\n';
+            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + displayCodes[i] + '】包含缓冲编码。\n';
         }
         if (posChichu(newCodes[i][0].toLowerCase()) === posChichu(newCodes[i][1].toLowerCase())) {
-            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + newCodes[i] + '】存在位置冲突。\n';
+            outputInfo += '您输入的第' + (i + 1).toString() + '行编码【' + displayCodes[i] + '】存在位置冲突。\n';
         }
     }
 
@@ -198,7 +201,7 @@ function edgeInputCheck() {
     if (outputInfo === "") {
         document.getElementById("popup").style.display = "none";
         document.getElementById("inputInfo").innerHTML = "<b>输入信息统计: </b>您已输入" +
-            newCodes[0] + ", " + newCodes[1] + ", ... , " + newCodes.slice(-2, -1) + ", " + newCodes.slice(-1) + "共" + newCodes.length + "组编码。";
+            edgeCodeToDisplay(newCodes[0]).toUpperCase() + ", " + edgeCodeToDisplay(newCodes[1]).toUpperCase() + ", ... , " + edgeCodeToDisplay(newCodes.slice(-2, -1).join("")).toUpperCase() + ", " + edgeCodeToDisplay(newCodes.slice(-1).join("")).toUpperCase() + "共" + newCodes.length + "组编码。";
         return newCodes;
     } else {
         window.alert(outputInfo);
@@ -221,8 +224,8 @@ function addSample() {
     for (let i = 0; i < eList1.length; i++) {
         if (eList1[i] !== edgebuffer) {
             for (let j = 0; j < eList2.length; j++) {
-                document.getElementById("inputCodes").value += eList1[i].toUpperCase() + eList2[j].toUpperCase() + '\n';
-                document.getElementById("inputCodes").value += eList2[j].toUpperCase() + eList1[i].toUpperCase() + '\n';
+                document.getElementById("inputCodes").value += edgeCodeToDisplay((eList1[i] + eList2[j]).toUpperCase()) + '\n';
+                document.getElementById("inputCodes").value += edgeCodeToDisplay((eList2[j] + eList1[i]).toUpperCase()) + '\n';
             }
         }
     }

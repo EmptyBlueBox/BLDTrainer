@@ -43,10 +43,10 @@ function codereader() {
 
     document.getElementById("player").setAttribute("alg", cubeorientation() + scr);
 
-    document.getElementById("edge").innerHTML = "棱块读码：" + edgeread(scr);
-    document.getElementById("flip").innerHTML = "棱块翻色：" + edgeorientation(scr);
-    document.getElementById("corn").innerHTML = "角块读码：" + cornerread(scr);
-    document.getElementById("twis").innerHTML = "角块翻色：" + cornerorientation(scr);
+    document.getElementById("edge").innerHTML = "棱块读码：" + edgeCodeHtmlToDisplay(edgeread(scr));
+    document.getElementById("flip").innerHTML = "棱块翻色：" + edgeCodeToDisplay(edgeorientation(scr));
+    document.getElementById("corn").innerHTML = "角块读码：" + cornerCodeHtmlToDisplay(cornerread(scr));
+    document.getElementById("twis").innerHTML = "角块翻色：" + cornerCodeToDisplay(cornerorientation(scr));
 
     document.getElementById("alartoutput1").style.display = "none";
     document.getElementById("alartoutput1").innerHTML = "";
@@ -72,11 +72,17 @@ function solver() {
     const cornerbuffer = String(document.getElementById("cornerbuffer").value).toUpperCase();
     const edgebuffer = String(document.getElementById("edgebuffer").value).toUpperCase();
 
-    let edgecode = document.getElementById("edgesolve").value.replace(/\s/g, "").toUpperCase();
-    let cornercode = document.getElementById("cornersolve").value.replace(/\s/g, "").toUpperCase();
-    let paritycode = document.getElementById("paritysolve").value.replace(/\s/g, "").toUpperCase();
-    let flipcode = document.getElementById("flipsolve").value.replace(/\s/g, "").toUpperCase();
-    let twistcode = document.getElementById("twistsolve").value.replace(/\s/g, "").toUpperCase();
+    let edgecode_display = document.getElementById("edgesolve").value.replace(/\s/g, "").toUpperCase();
+    let cornercode_display = document.getElementById("cornersolve").value.replace(/\s/g, "").toUpperCase();
+    let paritycode_display = document.getElementById("paritysolve").value.replace(/\s/g, "").toUpperCase();
+    let flipcode_display = document.getElementById("flipsolve").value.replace(/\s/g, "").toUpperCase();
+    let twistcode_display = document.getElementById("twistsolve").value.replace(/\s/g, "").toUpperCase();
+
+    let edgecode = edgeCodeFromDisplay(edgecode_display);
+    let cornercode = cornerCodeFromDisplay(cornercode_display);
+    let paritycode = parityCodeFromDisplay(paritycode_display);
+    let flipcode = edgeCodeFromDisplay(flipcode_display);
+    let twistcode = cornerCodeFromDisplay(twistcode_display);
 
 
     if (edgecode.length % 2 === 1 || cornercode.length % 2 === 1 || paritycode.length % 2 === 1 || flipcode.length % 2 === 1 || twistcode.length % 2 === 1) {
@@ -92,7 +98,7 @@ function solver() {
             switch (solveType) {
                 case "edgesolve":
                     for (let i = 0; i < ~~(edgecode.length/2)*2; i += 2) {
-                        if (!isAlphabet(edgecode[i]) || !isAlphabet(edgecode[i+1]) ) {
+                        if (!isEdgeDisplayChar(edgecode_display[i]) || !isEdgeDisplayChar(edgecode_display[i + 1])) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 输入非法编码！";
                         }else if (posChichu(edgecode[i].toLowerCase()) === posChichu(edgebuffer.toLowerCase()) || posChichu(edgecode[i + 1].toLowerCase()) === posChichu(edgebuffer.toLowerCase())) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 不能出现缓冲块编码！";
@@ -106,7 +112,7 @@ function solver() {
                     break;
                 case "flipsolve":
                     for (let i = 0; i < ~~(flipcode.length/2)*2; i += 2) {
-                        if (!isAlphabet(flipcode[i]) || !isAlphabet(flipcode[i+1]) ) {
+                        if (!isEdgeDisplayChar(flipcode_display[i]) || !isEdgeDisplayChar(flipcode_display[i + 1])) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 输入非法编码！";
                         }else if (posChichu(flipcode[i].toLowerCase()) === posChichu(edgebuffer.toLowerCase()) || posChichu(flipcode[i + 1].toLowerCase()) === posChichu(edgebuffer.toLowerCase())) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 不能出现缓冲块编码！";
@@ -121,7 +127,7 @@ function solver() {
                     break;
                 case "cornersolve":
                     for (let i = 0; i < ~~(cornercode.length/2)*2; i += 2) {
-                        if (!isAlphabet(cornercode[i]) || !isAlphabet(cornercode[i+1]) ) {
+                        if (!isCornerDisplayChar(cornercode_display[i]) || !isCornerDisplayChar(cornercode_display[i + 1])) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 输入非法编码！";
                         }else if (posChichu(cornercode[i]) === posChichu(cornerbuffer) || posChichu(cornercode[i + 1]) === posChichu(cornerbuffer)) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 不能出现缓冲块编码！";
@@ -135,7 +141,7 @@ function solver() {
                     break;
                 case "twistsolve":
                     for (let i = 0; i < ~~(twistcode.length/2)*2; i += 2) {
-                        if (!isAlphabet(twistcode[i]) || !isAlphabet(twistcode[i+1]) ) {
+                        if (!isCornerDisplayChar(twistcode_display[i]) || !isCornerDisplayChar(twistcode_display[i + 1])) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 输入非法编码！";
                         }else if (posChichu(twistcode[i]) === posChichu(cornerbuffer) || posChichu(twistcode[i + 1]) === posChichu(cornerbuffer)) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 不能出现缓冲块编码！";
@@ -149,7 +155,7 @@ function solver() {
                     break;
                 case "paritysolve":
                     for (let i = 0; i < ~~(paritycode.length/2)*2; i += 2) {
-                        if (!isAlphabet(paritycode[i]) || !isAlphabet(paritycode[i+1]) ) {
+                        if (!isEdgeDisplayChar(paritycode_display[i]) || !isCornerDisplayChar(paritycode_display[i + 1])) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 输入非法编码！";
                         }else if (posChichu(paritycode[i].toLowerCase()) === posChichu(edgebuffer.toLowerCase()) || posChichu(paritycode[i + 1]) === posChichu(cornerbuffer)) {
                             document.getElementById("alartoutput2").innerHTML = "&#9888 不能出现缓冲块编码！";

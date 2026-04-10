@@ -132,6 +132,34 @@
               </a>
             </section>
           </section>
+          <section style="max-width:56em;margin:2em auto 0 auto;padding:1.5em;border:1px solid rgba(0,0,0,0.12);border-radius:1em;background:rgba(255,255,255,0.72)">
+            <h2 style="margin:0 0 0.75em 0;text-align:center">自定义编码替换</h2>
+            <p style="margin:0 0 1em 0;line-height:1.6">
+              输入角块和棱块替换编码串后，站内缓冲、借位顺序、输入示例和读码等都会自动替换。
+            </p>
+            <div style="display:grid;grid-template-columns:1.1fr 1.1fr 0.9fr;gap:0.75em;align-items:center;margin-bottom:0.9em;font-size:0.95em;opacity:0.82">
+              <strong>分类</strong>
+              <strong>彳亍编码字符串</strong>
+              <strong>替换为的字符串</strong>
+            </div>
+            <div style="display:grid;grid-template-columns:1.1fr 1.1fr 0.9fr;gap:0.75em;align-items:center;margin-bottom:0.9em">
+              <strong>角块编码顺序</strong>
+              <input id="custom_corner_code_source" type="text" autocomplete="off" style="width:100%;text-transform:uppercase;text-align:center" />
+              <input id="custom_corner_code_target" type="text" autocomplete="off" style="width:100%;text-transform:uppercase;text-align:center" />
+            </div>
+            <div style="display:grid;grid-template-columns:1.1fr 1.1fr 0.9fr;gap:0.75em;align-items:center">
+              <strong>棱块编码顺序</strong>
+              <input id="custom_edge_code_source" type="text" autocomplete="off" style="width:100%;text-transform:uppercase;text-align:center" />
+              <input id="custom_edge_code_target" type="text" autocomplete="off" style="width:100%;text-transform:uppercase;text-align:center" />
+            </div>
+            <p style="margin:0.9em 0 1em 0;font-size:0.88em;line-height:1.6;opacity:0.8">
+              例如: 角块编码顺序左侧输入 DA, 右侧输入 AD, 就会把彳亍编码的 A 和 D 对换。默认彳亍编码字符串按照上前右后左下的面顺序, 每个面从左上开始顺时针看。
+            </p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1em">
+              <button id="save_custom_code" type="button">保存并应用</button>
+              <button id="reset_custom_code" type="button">恢复默认</button>
+            </div>
+          </section>
           <footer id="footer" style="text-align: center;">
             <div class="inner">
               <ul class="copyright">
@@ -152,6 +180,7 @@
   <script src="assets/js/setcode.js"></script>
   <script src="assets/js/language.js"></script>
   <script src="assets/js/utils.js"></script>
+  <script src="assets/js/custom_code.js"></script>
 </body>
 
 </html>

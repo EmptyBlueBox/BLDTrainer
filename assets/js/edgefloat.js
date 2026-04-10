@@ -99,8 +99,8 @@ function edgefloat() {
 
 function normalfloat() {
 
-    let eBufferList = document.getElementById("edgefloatorder").value.toLowerCase().split("");
-    let eEjectList = document.getElementById("edgeejectpos").value.toLowerCase().split("");
+    let eBufferList = edgeCodeFromDisplay(document.getElementById("edgefloatorder").value.toUpperCase().replace(/\s/g, "")).toLowerCase().split("");
+    let eEjectList = edgeCodeFromDisplay(document.getElementById("edgeejectpos").value.toUpperCase().replace(/\s/g, "")).toLowerCase().split("");
     let cornerScramble = document.getElementById("cornerscramble").checked;
     let algAllList1 = [];
     let algAllList0 = [];
@@ -210,14 +210,14 @@ function normalfloat() {
         }
     }
 
-    document.getElementById("outputInfo").innerHTML = "<b>输出信息统计: </b>已生成遍历副缓冲" + eBufferList[1].toUpperCase() + "全部公式的" + times + "条打乱。";
+    document.getElementById("outputInfo").innerHTML = "<b>输出信息统计: </b>已生成遍历副缓冲" + edgeCodeToDisplay(eBufferList[1].toUpperCase()) + "全部公式的" + times + "条打乱。";
     if (document.getElementById("outputScrs").value != "") {
         document.getElementById("copyBtn").style.display = "block";
     }
 }
 
 function ejectfloat() {
-    let eEjectList = document.getElementById("edgeejectpos").value.toLowerCase().split("");
+    let eEjectList = edgeCodeFromDisplay(document.getElementById("edgeejectpos").value.toUpperCase().replace(/\s/g, "")).toLowerCase().split("");
     let cornerScramble = document.getElementById("cornerscramble").checked;
 
     for (let i = 0; i < 500; i++) {
